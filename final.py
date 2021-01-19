@@ -1,3 +1,4 @@
+import random
 import warnings
 
 import pandas as pd
@@ -12,6 +13,14 @@ warnings.filterwarnings("ignore")
 
 file = open("creditcard.csv", "r")
 filew = open("creditpositive.csv", "w")
+
+randomNumbers = []
+for i in range(500):
+    randomNumbers.append(random.randint(1,284800))
+
+randomNumbers.sort()
+
+
 lspositive = []
 count = 0
 for line in file:
@@ -24,7 +33,7 @@ for line in file:
     if int(ls[-1][1]) == 1:
 
         filew.write(",".join(ls))
-    elif count < 500:
+    elif count in randomNumbers:
         filew.write(",".join(ls))
 df = pd.read_csv('creditpositive.csv')
 
