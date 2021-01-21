@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
 file = open("creditcard.csv", "r")
 filew = open("creditpositive.csv", "w")
 
-df = pd.read_csv('creditcard.csv')
+unbalanceddf = pd.read_csv('creditcard.csv')
 
 
 
@@ -23,7 +23,7 @@ df = pd.read_csv('creditcard.csv')
 Data is highly unbalanced because of that I will be applying undersampling technique.
 
 Firstly I attempted to do undersampling on imbalanced data.
-500 random numbers will be selected and these rows will be taken as undersampled
+500 random numbers will be selected randomly and these rows will be taken as undersampled
 """
 
 randomNumbers = []
@@ -67,7 +67,7 @@ y_predict = km.predict(x_test)
 print(accuracy_score(y_test, y_predict))
 
 fig, (axis2,axis ) = plt.subplots(1,2)
-
+axis.set_title("Clustering")
 axis.plot(x_test[y_predict == 0, 1], x_test[y_predict == 0, 29], '+b')
 axis.plot(x_test[y_predict == 1, 1], x_test[y_predict == 1, 29], '+g')
 
@@ -75,7 +75,7 @@ axis2.set_title("Original data with classes.")
 axis2.plot(x_test[y_test == 0, 1], x_test[y_test == 0, 29], '+b')
 axis2.plot(x_test[y_test == 1, 1], x_test[y_test == 1, 29], '+g')
 
-plt.show()
+
 fig.savefig("clustering on credit cart data.pdf", dpi=None,
             facecolor='w', edgecolor='w', format="pdf")
 
@@ -86,7 +86,7 @@ y_predict = req.predict(x_test)
 print("Accuracy score on balanced data with logistic regression "+str(accuracy_score(y_test,y_predict)))
 fig2, (axis3,axis4 ) = plt.subplots(1,2)
 
-axis4.set_title("logistic regresyon applied and accuracy score:"+str(accuracy_score(y_test,y_predict)))
+axis4.set_title("logistic regresyon applied")
 axis4.plot(x_test[y_predict == 0, 1], x_test[y_predict == 0, 29], '+b')
 axis4.plot(x_test[y_predict == 1, 1], x_test[y_predict == 1, 29], '+g')
 
@@ -94,7 +94,7 @@ axis3.set_title("Original data with classes.")
 axis3.plot(x_test[y_test == 0, 1], x_test[y_test == 0, 29], '+b')
 axis3.plot(x_test[y_test == 1, 1], x_test[y_test == 1, 29], '+g')
 
-plt.show()
+
 
 
 clf = RandomForestClassifier(max_depth=2, random_state=0).fit(x_train,y_train)
@@ -102,3 +102,24 @@ clf = RandomForestClassifier(max_depth=2, random_state=0).fit(x_train,y_train)
 y_predict = clf.predict(x_test)
 
 print("Accuracy score for Random Forest classiffier: " + str(accuracy_score(y_test,y_predict)))
+
+unbalancedNumpy = unbalanceddf.to_numpy()
+
+X = unbalancedNumpy[:, :-1]
+Y = unbalancedNumpy[:, -1]
+
+oversample =SMOTE()
+
+x , y = oversample.fit_resample(X, Y)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+
+km = KMeans(
+    n_clusters=2, init='random',
+    n_init=10, max_iter=300,
+    tol=1e-04, random_state=0
+).fit(x_train, y_train)
+
+y_predict = km.predict(x_test)
+
+print("Accuracy score for balanced data with SMOTE: "+ str(accuracy_score(y_test,y_predict)))
