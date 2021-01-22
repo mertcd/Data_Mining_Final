@@ -23,7 +23,7 @@ unbalanceddf = pd.read_csv('creditcard.csv')
 Data is highly unbalanced because of that I will be applying undersampling technique.
 
 Firstly I attempted to do undersampling on imbalanced data.
-500 random numbers will be selected randomly and these rows will be taken as undersampled
+500 random numbers will be selected randomly and these rows will be taken as undersampled.
 """
 
 randomNumbers = []
