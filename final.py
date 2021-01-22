@@ -136,3 +136,10 @@ axis1.plot(x_test[y_test == 0, 1], x_test[y_test == 0, 29], '+b')
 axis1.plot(x_test[y_test == 1, 1], x_test[y_test == 1, 29], '+g')
 
 plt.show()
+
+
+clf = RandomForestClassifier(max_depth=2, random_state=0).fit(x_train, y_train)
+
+y_predict = clf.predict(x_test)
+
+print("Accuracy score for Random Forest classiffier: " + str(accuracy_score(y_test, y_predict)))
