@@ -48,7 +48,7 @@ for line in file:
     elif count in randomNumbers:#Random rows will be selected for undersampling
         filew.write(",".join(ls))
 df = pd.read_csv('creditpositive.csv')
-
+print("Data has been balanced by applying undersampling technique.")
 ccfraud = df.to_numpy()
 
 X = ccfraud[:, :-1]
@@ -65,7 +65,8 @@ km = KMeans(
 
 y_predict = km.predict(x_test)
 print(accuracy_score(y_test, y_predict))
-
+"""I used only meaningful parameters for graphic plotting main reason to draw graphic is to see 
+whether data is balanced and also determine performance of clustering algorithms  """
 fig, (axis2,axis ) = plt.subplots(1,2)
 axis.set_title("Clustering")
 axis.plot(x_test[y_predict == 0, 1], x_test[y_predict == 0, 29], '+b')
@@ -79,7 +80,7 @@ axis2.plot(x_test[y_test == 1, 1], x_test[y_test == 1, 29], '+g')
 fig.savefig("clustering on credit cart data.pdf", dpi=None,
             facecolor='w', edgecolor='w', format="pdf")
 
-req = LogisticRegression().fit(x_train,y_train)
+req = LogisticRegression(random_state=0).fit(x_train,y_train)
 
 y_predict = req.predict(x_test)
 
@@ -102,12 +103,12 @@ clf = RandomForestClassifier(max_depth=2, random_state=0).fit(x_train,y_train)
 y_predict = clf.predict(x_test)
 
 print("Accuracy score for Random Forest classiffier: " + str(accuracy_score(y_test,y_predict)))
-
+print("Data has been balanced with Smote")
 unbalancedNumpy = unbalanceddf.to_numpy()
 
 X = unbalancedNumpy[:, :-1]
 Y = unbalancedNumpy[:, -1]
-
+"""I applied smote for minority class generation because majority classes """
 oversample =SMOTE()
 
 x , y = oversample.fit_resample(X, Y)
@@ -122,4 +123,22 @@ km = KMeans(
 
 y_predict = km.predict(x_test)
 
-print("Accuracy score for balanced data with SMOTE: "+ str(accuracy_score(y_test,y_predict)))
+print("Accuracy score for Kmeans: "+ str(accuracy_score(y_test,y_predict)))
+
+breq = LogisticRegression(random_state=0).fit(x_train,y_train)
+
+y_predict = breq.predict(x_test)
+
+print("Accuracy score for Logistic regression: "+ str(accuracy_score(y_test,y_predict)))
+
+fig3, (axis1,axis2 ) = plt.subplots(1,2)
+
+axis2.set_title("Logistic regresyon applied")
+axis2.plot(x_test[y_predict == 0, 1], x_test[y_predict == 0, 29], '+b')
+axis2.plot(x_test[y_predict == 1, 1], x_test[y_predict == 1, 29], '+g')
+
+axis1.set_title("Original data with classes.")
+axis1.plot(x_test[y_test == 0, 1], x_test[y_test == 0, 29], '+b')
+axis1.plot(x_test[y_test == 1, 1], x_test[y_test == 1, 29], '+g')
+
+plt.show()
